@@ -1,12 +1,20 @@
 import { connectDB } from "@/lib/db";
 import { Achievement } from "@/model/achievement.model";
 import { NextRequest, NextResponse } from "next/server";
-
+import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth";
 interface ParamsType {
   params: Promise<{ id: string }>;
 }
 
 export async function PUT(req: NextRequest, { params }: ParamsType) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json(
+      { success: false, message: "Unauthorized" },
+      { status: 401 },
+    );
+  }
   try {
     await connectDB();
     const { id } = await params;
@@ -58,8 +66,15 @@ export async function PUT(req: NextRequest, { params }: ParamsType) {
 }
 
 export async function DELETE(req: NextRequest, { params }: ParamsType) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json(
+      { success: false, message: "Unauthorized" },
+      { status: 401 },
+    );
+  }
   try {
-    await connectDB(); 
+    await connectDB();
 
     const { id } = await params;
 
@@ -71,7 +86,7 @@ export async function DELETE(req: NextRequest, { params }: ParamsType) {
           success: false,
           message: "Achievement not found",
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -80,7 +95,7 @@ export async function DELETE(req: NextRequest, { params }: ParamsType) {
         success: true,
         message: "Achievement deleted successfully",
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error(error);
@@ -90,7 +105,7 @@ export async function DELETE(req: NextRequest, { params }: ParamsType) {
         success: false,
         message: "Failed to delete achievement",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

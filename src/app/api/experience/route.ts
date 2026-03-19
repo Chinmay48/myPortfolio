@@ -1,7 +1,8 @@
 import { connectDB } from "@/lib/db";
 import { Experience } from "@/model/experience.model";
 import { NextRequest, NextResponse } from "next/server";
-
+import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth";
 export async function GET() {
   try {
     await connectDB();
@@ -25,6 +26,13 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized" },
+        { status: 401 },
+      );
+    }
   try {
     await connectDB();
     const body = await req.json();

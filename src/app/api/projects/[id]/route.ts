@@ -1,12 +1,20 @@
 import { connectDB } from "@/lib/db";
 import { Project } from "@/model/project.model";
 import { NextRequest, NextResponse } from "next/server";
-
+import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth";
 interface paramsType {
   params: Promise<{ id: string }>;
 }
 
 export async function PUT(req: NextRequest, { params }: paramsType) {
+ const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized" },
+        { status: 401 },
+      );
+    }
   try {
     await connectDB();
     const body = await req.json();
@@ -54,6 +62,13 @@ export async function PUT(req: NextRequest, { params }: paramsType) {
 
 
 export async function DELETE(req:NextRequest,{params}:paramsType) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json(
+      { success: false, message: "Unauthorized" },
+      { status: 401 },
+    );
+  }
     try {
         await connectDB()
 

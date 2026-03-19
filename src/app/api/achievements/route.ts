@@ -1,11 +1,13 @@
 import { connectDB } from "@/lib/db";
 import { Achievement } from "@/model/achievement.model";
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
 
+import { authOptions } from "@/lib/auth";
 export async function GET() {
   try {
     await connectDB();
-    const achivements = await Achievement.find().sort({ date:-1 });
+    const achivements = await Achievement.find().sort({ date: -1 });
     return NextResponse.json(
       {
         success: true,
@@ -25,6 +27,13 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json(
+      { success: false, message: "Unauthorized" },
+      { status: 401 },
+    );
+  }
   try {
     await connectDB();
     const body = await req.json();
