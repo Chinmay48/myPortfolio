@@ -1,8 +1,8 @@
+
+
 import type { Metadata } from "next";
-
+import ToastProvider from "@/components/ui/ToastProvider";
 import "./globals.css";
-
-
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -19,7 +19,9 @@ export default function RootLayout({
       lang="en"
       
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">{children}
+      <ToastProvider/>
+      </body>
     </html>
   );
 }

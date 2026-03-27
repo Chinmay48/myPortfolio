@@ -18,7 +18,7 @@ export default function LoginPage() {
         </p>
 
         <button
-          onClick={() => signIn("google")}
+          onClick={() => signIn("google",{callbackUrl:"/admin"})}
           className="flex items-center justify-center gap-3 w-full py-3 bg-white text-black rounded-lg font-medium hover:scale-105 transition-transform"
         >
           <FcGoogle size={20} />

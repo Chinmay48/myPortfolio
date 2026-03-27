@@ -16,6 +16,14 @@ export const authOptions: NextAuthOptions = {
       }
       return true;
     },
+
+    async redirect({ url, baseUrl }) {
+      return `${baseUrl}/admin`;
+    },
+  },
+
+  pages: {
+    signIn: "/login", // your custom login page
   },
 
   secret: process.env.NEXTAUTH_SECRET,
