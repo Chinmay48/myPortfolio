@@ -16,15 +16,16 @@ import {
   Loader2
 } from "lucide-react";
 
-export default function ProjectForm() {
+export default function ProjectForm({initialData}:any) {
+  console.log("Initail Data:",initialData)
   const [form, setForm] = useState({
-    title: "",
-    description: "",
-    githubUrl: "",
-    liveUrl: "",
-    type: "individual",
-    techStack: "",
-    image: "",
+    title: initialData?.title || "",
+    description:  initialData?.description || "",
+    githubUrl:  initialData?.githubUrl || "",
+    liveUrl: initialData?.liveUrl || "",
+    type:  initialData?.type || "individual",
+    techStack:  initialData?.techStack?.join(",") ||  "",
+    image:  initialData?.image || "",
   });
 
   const [file, setFile] = useState<File | null>(null);
@@ -33,6 +34,8 @@ export default function ProjectForm() {
   const handleChange = (e: any) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+
+  const isEdit= !!initialData;
 
   const handleUpload = async () => {
     if (!file) {
@@ -51,8 +54,9 @@ export default function ProjectForm() {
       if (!res.ok) throw new Error("Upload Failed");
 
       const data = await res.json();
+      
       if (data.success) {
-        setForm({ ...form, image: data.secure_url });
+        setForm({ ...form, image: data.data.secure_url });
         showSuccess("Image Uploaded successfully");
       } else {
         throw new Error(data.message || "Upload failed");
@@ -63,15 +67,18 @@ export default function ProjectForm() {
       setIsUploading(false);
     }
   };
-
+   
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    console.log(form);
     try {
-      const res = await fetch("/api/projects", {
-        method: "POST",
+      const url= isEdit?`/api/projects/${initialData._id}`:`/api/projects`;
+      const method=isEdit?"PUT":"POST"
+      const res = await fetch(url, {
+        method: method,
         body: JSON.stringify({
           ...form,
-          techStack: form.techStack.split(",").map(s => s.trim()),
+          techStack: form.techStack.split(",").map((s:string) => s.trim()),
         }),
       });
 
@@ -117,6 +124,7 @@ export default function ProjectForm() {
             placeholder="E.g. Portfolio v3"
             onChange={handleChange}
             className="w-full p-3 bg-white/5 border border-white/10 rounded-xl focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 outline-none transition-all text-white placeholder:text-gray-600"
+            value={form.title}
           />
         </motion.div>
 
@@ -127,6 +135,7 @@ export default function ProjectForm() {
           </label>
           <textarea
             name="description"
+            value={form.description}
             rows={3}
             placeholder="What makes this project special?"
             onChange={handleChange}
@@ -140,6 +149,7 @@ export default function ProjectForm() {
             <Github size={14} /> GitHub URL
           </label>
           <input
+            value={form.githubUrl}
             name="githubUrl"
             placeholder="https://github.com/..."
             onChange={handleChange}
@@ -153,6 +163,7 @@ export default function ProjectForm() {
           </label>
           <input
             name="liveUrl"
+            value={form.liveUrl}
             placeholder="https://demo.com"
             onChange={handleChange}
             className="w-full p-3 bg-white/5 border border-white/10 rounded-xl focus:border-cyan-500/50 outline-none transition-all text-white placeholder:text-gray-600"
@@ -165,6 +176,7 @@ export default function ProjectForm() {
             <Users size={14} /> Project Type
           </label>
           <select
+            value={form.type}
             name="type"
             onChange={handleChange}
             className="w-full p-3 bg-white/5 border border-white/10 rounded-xl focus:border-cyan-500/50 outline-none transition-all text-white appearance-none cursor-pointer"
@@ -180,6 +192,7 @@ export default function ProjectForm() {
           </label>
           <input
             name="techStack"
+            value={form.techStack}
             placeholder="Next.js, Tailwind, GSAP"
             onChange={handleChange}
             className="w-full p-3 bg-white/5 border border-white/10 rounded-xl focus:border-cyan-500/50 outline-none transition-all text-white placeholder:text-gray-600"
@@ -232,7 +245,7 @@ export default function ProjectForm() {
         className="w-full py-4 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-xl font-bold uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] transition-all flex items-center justify-center gap-3"
       >
         <PlusCircle size={20} />
-        Create Project
+       {isEdit?"Update Project":"Create Project"}
       </motion.button>
     </motion.form>
   );

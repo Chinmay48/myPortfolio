@@ -6,9 +6,11 @@ import { Pencil, Trash2, ExternalLink, Github, Code2 } from "lucide-react";
 interface AdminProjectCardProps {
   project: any;
   onDelete: (id: string) => void;
+  onUpdate:(id:String)=>void;
 }
 
-export default function AdminProjectCard({ project, onDelete }: AdminProjectCardProps) {
+export default function AdminProjectCard({ project, onDelete,onUpdate }: AdminProjectCardProps) {
+  console.log(project)
   return (
     <motion.div
       layout
@@ -48,8 +50,8 @@ export default function AdminProjectCard({ project, onDelete }: AdminProjectCard
 
         {/* Action Buttons */}
         <div className="grid grid-cols-2 gap-3 pt-4 border-t border-white/5">
-          <button className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-cyan-500/5 border border-cyan-500/20 text-cyan-400 text-xs font-bold uppercase tracking-widest hover:bg-cyan-500 hover:text-black transition-all active:scale-95">
-            <Pencil size={14} />
+          <button className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-cyan-500/5 border border-cyan-500/20 text-cyan-400 text-xs font-bold uppercase tracking-widest hover:bg-cyan-500 hover:text-black transition-all active:scale-95" onClick={()=>onUpdate(project._id)}>
+            <Pencil size={14}  />
             Update
           </button>
           <button 

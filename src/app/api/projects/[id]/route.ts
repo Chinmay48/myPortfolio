@@ -97,3 +97,27 @@ export async function DELETE(req:NextRequest,{params}:paramsType) {
       );
     }
 }
+
+
+export async function GET(req:NextRequest,{params}:paramsType){
+  try {
+    await  connectDB();
+    const {id}=await params;
+    const project=await Project.findById(id);
+    if(!project){
+      return NextResponse.json({
+        success:false,
+        message:"Project not found",
+      },{status:404})
+    }
+
+    return NextResponse.json({
+      success:true,
+      data:project
+    })
+  } catch (error) {
+    return NextResponse.json({
+      success:false,message:"Failed to fetch project"
+    },{status:500})
+  }
+}
