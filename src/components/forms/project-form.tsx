@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 
 export default function ProjectForm({initialData}:any) {
-  console.log("Initail Data:",initialData)
+ 
   const [form, setForm] = useState({
     title: initialData?.title || "",
     description:  initialData?.description || "",

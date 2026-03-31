@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Briefcase, LayoutGrid, ListFilter } from "lucide-react";
+import { Plus, Briefcase} from "lucide-react";
 import AdminProjectCard from "@/components/cards/project-card";
 import { showError, showSuccess } from "@/utils/toast";
 import { useEffect } from "react";

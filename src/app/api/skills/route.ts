@@ -31,7 +31,7 @@ export async function  POST(req:NextRequest) {
       }
    try {
      await connectDB()
-    const body=req.json();
+    const body= await req.json();
     const {name,icon,category}=await body
 
     if(!name || !icon || !category){
