@@ -10,7 +10,7 @@ import {
   ExternalLink, 
   Users, 
   Code, 
-  Upload, 
+  Upload,  
   PlusCircle,
   Image as ImageIcon,
   Loader2
@@ -70,7 +70,7 @@ export default function ProjectForm({initialData}:any) {
    
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log(form);
+   
     try {
       const url= isEdit?`/api/projects/${initialData._id}`:`/api/projects`;
       const method=isEdit?"PUT":"POST"

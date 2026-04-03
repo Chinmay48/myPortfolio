@@ -8,9 +8,7 @@ interface paramsType {
   params: Promise<{ id: string }>;
 }
 
-//
-// ✅ GET SINGLE SKILL
-//
+
 export async function GET(req: NextRequest, { params }: paramsType) {
   try {
     await connectDB();

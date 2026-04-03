@@ -126,3 +126,27 @@ export async function DELETE(
     );
   }
 }
+
+
+export async function GET(req:NextRequest,{params}:ParamsType){
+  try {
+    await connectDB();
+    const {id} = await params;
+    const experience= await Experience.findById(id);
+    if(!experience){
+      return NextResponse.json({
+        success:false,
+        message:"Experience not found",
+
+      },{status:404})
+    }
+    return NextResponse.json({
+      success:true,
+      data:experience
+    })
+  } catch (error) {
+    return NextResponse.json({
+      success:false,message:"Failed to fetch experience"
+    },{status:500})
+  }
+}

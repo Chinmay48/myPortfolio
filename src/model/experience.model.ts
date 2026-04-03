@@ -50,4 +50,5 @@ const ExperienceSchema=new Schema<IExperience>(
     }
 )
 
-export const Experience=models.Experience || model<IExperience>("Experinece",ExperienceSchema)
+export const Experience =
+  models.Experience || model<IExperience>("Experience", ExperienceSchema);
