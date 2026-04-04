@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, models, model } from "mongoose";
+import  { Schema, Document, models, model } from "mongoose";
 
 export interface IAchievement extends Document {
   title: string;
@@ -32,7 +32,7 @@ const AchievementSchema = new Schema<IAchievement>(
       required: true, // certificate image URL
     },
     issuer: {
-      type: String, // e.g., Google, Hackathon name
+      type: String, 
     },
     date: {
       type: Date,

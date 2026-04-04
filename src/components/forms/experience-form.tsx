@@ -36,7 +36,7 @@ const itemVariants: Variants = {
 export default function ExperienceForm({ initialData }: any) {
   const router = useRouter();
   
-  // Helper to format Date for input[type="date"]
+ 
   const formatDate = (date: any) => {
     if (!date) return "";
     return new Date(date).toISOString().split('T')[0];
