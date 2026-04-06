@@ -10,7 +10,7 @@ interface AdminProjectCardProps {
 }
 
 export default function AdminProjectCard({ project, onDelete,onUpdate }: AdminProjectCardProps) {
-  console.log(project)
+  
   return (
     <motion.div
       layout

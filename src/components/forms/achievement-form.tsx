@@ -3,34 +3,32 @@
 import { showError, showSuccess } from "@/utils/toast";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { 
-  Type, 
-  AlignLeft, 
-  Github, 
-  ExternalLink, 
-  Users, 
-  Code, 
-  Upload,  
+import {
+  Type,
+  AlignLeft,
+  Github,
+  ExternalLink,
+  Users,
+  Code,
+  Upload,
   PlusCircle,
   Image as ImageIcon,
-  Loader2
+  Loader2,Calendar
 } from "lucide-react";
 
-export default function AchievementForm({initialData}:any) {
- const formatDate = (date: any) => {
+export default function AchievementForm({ initialData }: any) {
+  const formatDate = (date: any) => {
     if (!date) return "";
-    return new Date(date).toISOString().split('T')[0];
+    return new Date(date).toISOString().split("T")[0];
   };
   const [form, setForm] = useState({
     title: initialData?.title || "",
-    description:  initialData?.description || "",
-    type:  initialData?.type || "certificate",
-    image:  initialData?.image || "",
-    issuer:initialData?.issuer || "",
-    date:formatDate(initialData?.date),
+    description: initialData?.description || "",
+    type: initialData?.type || "certificate",
+    image: initialData?.image || "",
+    issuer: initialData?.issuer || "",
+    date: formatDate(initialData?.date),
   });
-
-  
 
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -39,7 +37,7 @@ export default function AchievementForm({initialData}:any) {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const isEdit= !!initialData;
+  const isEdit = !!initialData;
 
   const handleUpload = async () => {
     if (!file) {
@@ -58,7 +56,7 @@ export default function AchievementForm({initialData}:any) {
       if (!res.ok) throw new Error("Upload Failed");
 
       const data = await res.json();
-      
+
       if (data.success) {
         setForm({ ...form, image: data.data.secure_url });
         showSuccess("Image Uploaded successfully");
@@ -71,21 +69,22 @@ export default function AchievementForm({initialData}:any) {
       setIsUploading(false);
     }
   };
-   
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-   
+
     try {
-      const url= isEdit?`/api/achievements/${initialData._id}`:`/api/achievements`;
-      const method=isEdit?"PUT":"POST"
+      const url = isEdit
+        ? `/api/achievements/${initialData._id}`
+        : `/api/achievements`;
+      const method = isEdit ? "PUT" : "POST";
       const res = await fetch(url, {
         method: method,
-        body: JSON.stringify({
-        form
-        }),
+        body: JSON.stringify(form),
       });
 
       const data = await res.json();
+      console.log(data)
       if (data.success) showSuccess(data.message);
     } catch (error: any) {
       showError(error.message);
@@ -96,13 +95,13 @@ export default function AchievementForm({initialData}:any) {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.1 }
-    }
+      transition: { staggerChildren: 0.1 },
+    },
   };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1 }
+    visible: { y: 0, opacity: 1 },
   };
 
   return (
@@ -120,11 +119,11 @@ export default function AchievementForm({initialData}:any) {
         {/* Title */}
         <motion.div variants={itemVariants} className="space-y-2 col-span-2">
           <label className="text-xs font-bold uppercase tracking-widest text-gray-500 flex items-center gap-2">
-            <Type size={14} />  Title
+            <Type size={14} /> Title
           </label>
           <input
             name="title"
-            placeholder="E.g. Portfolio v3"
+            placeholder="E.g. Smart India Hackathon"
             onChange={handleChange}
             className="w-full p-3 bg-white/5 border border-white/10 rounded-xl focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 outline-none transition-all text-white placeholder:text-gray-600"
             value={form.title}
@@ -140,7 +139,7 @@ export default function AchievementForm({initialData}:any) {
             name="description"
             value={form.description}
             rows={3}
-            placeholder="What makes this project special?"
+            placeholder="What makes this achievement special?"
             onChange={handleChange}
             className="w-full p-3 bg-white/5 border border-white/10 rounded-xl focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 outline-none transition-all text-white placeholder:text-gray-600 resize-none"
           />
@@ -148,7 +147,7 @@ export default function AchievementForm({initialData}:any) {
 
         <motion.div variants={itemVariants} className="space-y-2">
           <label className="text-xs font-bold uppercase tracking-widest text-gray-500 flex items-center gap-2">
-            <Users size={14} /> Project Type
+            <Users size={14} /> Achievement Type
           </label>
           <select
             value={form.type}
@@ -156,22 +155,47 @@ export default function AchievementForm({initialData}:any) {
             onChange={handleChange}
             className="w-full p-3 bg-white/5 border border-white/10 rounded-xl focus:border-cyan-500/50 outline-none transition-all text-white appearance-none cursor-pointer"
           >
-            <option value="hackathon" className="bg-gray-900">Hackathon</option>
-            <option value="certificate" className="bg-gray-900">Certificate</option>
-            <option value="award" className="bg-gray-900">Award</option>
+            <option value="hackathon" className="bg-gray-900">
+              Hackathon
+            </option>
+            <option value="certificate" className="bg-gray-900">
+              Certificate
+            </option>
+            <option value="award" className="bg-gray-900">
+              Award
+            </option>
           </select>
         </motion.div>
-
-        
-
-       
+        <motion.div variants={itemVariants} className="space-y-2 col-span-2">
+          <label className="text-xs font-bold uppercase tracking-widest text-gray-500 flex items-center gap-2">
+            <Type size={14} /> Issuer
+          </label>
+          <input
+            name="issuer"
+            placeholder="E.g. Google"
+            onChange={handleChange}
+            className="w-full p-3 bg-white/5 border border-white/10 rounded-xl focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 outline-none transition-all text-white placeholder:text-gray-600"
+            value={form.issuer}
+          />
+        </motion.div>
+        <motion.div variants={itemVariants} className="space-y-2 group">
+          <Label icon={<Calendar size={14} />} text="Start Date" />
+          <input
+            type="date"
+            name="date"
+            required
+            value={form.date}
+            onChange={handleChange}
+            className="custom-input [color-scheme:dark]"
+          />
+        </motion.div>
 
         {/* File Upload Section */}
         <motion.div variants={itemVariants} className="col-span-2 space-y-4">
           <label className="text-xs font-bold uppercase tracking-widest text-gray-500 flex items-center gap-2">
             <ImageIcon size={14} /> Achievement Photos
           </label>
-          
+
           <div className="flex flex-col md:flex-row gap-4 items-center">
             <label className="flex-1 w-full flex flex-col items-center justify-center p-6 border-2 border-dashed border-white/10 hover:border-cyan-500/40 bg-white/5 rounded-2xl cursor-pointer transition-all group">
               <Upload className="text-gray-500 group-hover:text-cyan-400 mb-2 transition-colors" />
@@ -191,11 +215,15 @@ export default function AchievementForm({initialData}:any) {
               disabled={isUploading || !file}
               className="w-full md:w-auto px-6 py-3 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 rounded-xl hover:bg-cyan-500 hover:text-black transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 font-bold uppercase text-xs tracking-widest"
             >
-              {isUploading ? <Loader2 className="animate-spin" size={16} /> : <Upload size={16} />}
+              {isUploading ? (
+                <Loader2 className="animate-spin" size={16} />
+              ) : (
+                <Upload size={16} />
+              )}
               Upload
             </button>
           </div>
-          
+
           {form.image && (
             <p className="text-[10px] text-cyan-500/70 truncate bg-cyan-500/5 p-2 rounded border border-cyan-500/10">
               Successfully linked: {form.image}
@@ -212,8 +240,17 @@ export default function AchievementForm({initialData}:any) {
         className="w-full py-4 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-xl font-bold uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] transition-all flex items-center justify-center gap-3"
       >
         <PlusCircle size={20} />
-       {isEdit?"Update Project":"Create Project"}
+        {isEdit ? "Update Project" : "Create Project"}
       </motion.button>
     </motion.form>
+  );
+}
+
+function Label({ icon, text }: { icon: React.ReactNode; text: string }) {
+  return (
+    <label className="text-[10px] font-black uppercase tracking-[0.15em] text-gray-500 flex gap-2 items-center group-focus-within:text-cyan-400 transition-colors">
+      <span className="text-cyan-500/60 group-focus-within:text-cyan-400">{icon}</span>
+      {text}
+    </label>
   );
 }

@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
   try {
     await connectDB();
     const body = await req.json();
+    console.log(body)
     const { title, description, type, image, issuer, date } = body;
     if (!title || !description || !type || !image || !date) {
       return NextResponse.json(
