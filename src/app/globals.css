@@ -1,2 +1,10 @@
 @import "tailwindcss";
 
+:root {
+  --bg: #0A0A0A;
+  --card: #121212;
+  --cyan: #00F5D4;
+  --purple: #9B5DE5;
+  --text: #EAEAEA;
+}
+
