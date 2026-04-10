@@ -109,3 +109,26 @@ export async function DELETE(req: NextRequest, { params }: ParamsType) {
     );
   }
 }
+
+export async function GET(req:NextRequest,{params}:ParamsType){
+  try {
+    await  connectDB();
+    const {id}=await params;
+    const achievement=await Achievement.findById(id);
+    if(!achievement){
+      return NextResponse.json({
+        success:false,
+        message:"Achievement not found",
+      },{status:404})
+    }
+
+    return NextResponse.json({
+      success:true,
+      data:achievement
+    })
+  } catch (error) {
+    return NextResponse.json({
+      success:false,message:"Failed to fetch achievement"
+    },{status:500})
+  }
+}

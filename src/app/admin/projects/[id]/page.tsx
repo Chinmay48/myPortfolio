@@ -9,9 +9,27 @@ interface Props{
 
 export default async function AdminProjectsEditPage({params}:Props) {
 
-    const {id}=await params;
-    const res=await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/projects/${id}`,{cache:"no-store"});
-    const data= await res.json()
+    const { id } = await params;
+
+const res = await fetch(
+  `${process.env.NEXT_PUBLIC_BASE_URL}/api/achievements/${id}`,
+  { cache: "no-store" }
+);
+
+
+if (!res.ok) {
+  throw new Error(`Failed to fetch: ${res.status}`);
+}
+
+
+const text = await res.text();
+
+
+if (!text) {
+  throw new Error("Empty response from API");
+}
+
+const data = JSON.parse(text);
   return (
     <div className="space-y-10">
       <header>
