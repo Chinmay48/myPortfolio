@@ -50,7 +50,7 @@ export default function ExperiencePage() {
   if (!mounted) return null;
 
   return (
-    <main ref={containerRef} className="min-h-screen bg-[var(--bg)] text-[var(--text)] px-4 md:px-6 py-8 md:py-12 relative overflow-hidden">
+    <main ref={containerRef} className="min-h-screen bg-[var(--bg)] text-[var(--text)] px-4 md:px-12 py-8 md:py-12 relative overflow-hidden">
       {/* Background Decor */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 pointer-events-none">
         <div className="absolute top-24 left-10 w-72 h-72 bg-[var(--cyan)] opacity-[0.03] blur-[100px]" />
