@@ -29,7 +29,7 @@ const AchievementSchema = new Schema<IAchievement>(
     },
     image: {
       type: String,
-      required: true, // certificate image URL
+      required: true, 
     },
     issuer: {
       type: String, 

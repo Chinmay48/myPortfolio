@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { motion, useScroll, useSpring, } from "framer-motion";
-import {  Briefcase, ChevronRight } from "lucide-react";
+import { motion, useScroll, useSpring } from "framer-motion";
+import { Briefcase, ChevronRight, Calendar } from "lucide-react";
 
 interface Experience {
   _id: string;
@@ -19,12 +19,9 @@ export default function ExperiencePage() {
   const [data, setData] = useState<Experience[]>([]);
   const [loading, setLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
-  
-  // 1. Attach the ref to the outer container that is ALWAYS rendered
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll();
-
   const scaleY = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
@@ -32,7 +29,7 @@ export default function ExperiencePage() {
   });
 
   useEffect(() => {
-    setMounted(true); // 2. Confirm we are on the client
+    setMounted(true);
     const fetchExperience = async () => {
       try {
         const res = await fetch("/api/experience");
@@ -50,14 +47,10 @@ export default function ExperiencePage() {
     fetchExperience();
   }, []);
 
-  // Prevent hydration mismatch by returning null until mounted
   if (!mounted) return null;
 
   return (
-    <main 
-      ref={containerRef} // Now the target is stable and always exists
-      className="min-h-screen bg-[var(--bg)] text-[var(--text)] px-6 py-24 relative overflow-hidden"
-    >
+    <main ref={containerRef} className="min-h-screen bg-[var(--bg)] text-[var(--text)] px-4 md:px-6 py-8 md:py-12 relative overflow-hidden">
       {/* Background Decor */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 pointer-events-none">
         <div className="absolute top-24 left-10 w-72 h-72 bg-[var(--cyan)] opacity-[0.03] blur-[100px]" />
@@ -65,22 +58,23 @@ export default function ExperiencePage() {
       </div>
 
       <div className="max-w-6xl mx-auto">
-        <header className="mb-24 text-center">
-          <motion.h1 
+        <header className="mb-8 md:mb-12 text-center">
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-5xl md:text-7xl font-black mb-6"
+            className="text-4xl md:text-7xl font-black mb-4"
           >
             <span className="bg-gradient-to-r from-[var(--cyan)] via-[var(--purple)] to-[var(--cyan)] bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient-x">
               Career Path
             </span>
           </motion.h1>
+          <p className="text-gray-500 font-mono text-sm uppercase tracking-widest">My Professional Journey</p>
         </header>
 
         <div className="relative">
-          {/* Progress Line - Stays visible but fills up as data loads */}
+          {/* Progress Line */}
           <div className="absolute left-4 md:left-1/2 md:-translate-x-1/2 top-0 w-[2px] h-full bg-white/5">
-            <motion.div 
+            <motion.div
               style={{ scaleY, originY: 0 }}
               className="w-full h-full bg-gradient-to-b from-[var(--cyan)] via-[var(--purple)] to-transparent shadow-[0_0_15px_rgba(0,245,212,0.5)]"
             />
@@ -91,7 +85,7 @@ export default function ExperiencePage() {
               <div className="w-8 h-8 border-2 border-[var(--cyan)] border-t-transparent rounded-full animate-spin" />
             </div>
           ) : (
-            <div className="space-y-24">
+            <div className="space-y-12 md:space-y-24">
               {data.map((exp, index) => (
                 <ExperienceCard key={exp._id} exp={exp} index={index} />
               ))}
@@ -105,75 +99,77 @@ export default function ExperiencePage() {
 
 function ExperienceCard({ exp, index }: { exp: Experience; index: number }) {
   const isEven = index % 2 === 0;
+  // Clean empty strings from bullets
+  const stylishExperience = exp.description.split("•").filter(item => item.trim().length > 0);
+  const dateRange = `${formatDate(exp.startDate)} — ${exp.isCurrent ? "Present" : formatDate(exp.endDate)}`;
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: isEven ? -50 : 50 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      className={`relative flex items-center justify-between md:flex-row ${
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      className={`relative flex flex-col md:flex-row items-center justify-between ${
         isEven ? "md:flex-row-reverse" : ""
-      } flex-row`}
+      }`}
     >
-      {/* 1. Date (Mobile: Hidden, Desktop: Floating Side) */}
+      {/* 1. Desktop Date (Hidden on Mobile) */}
       <div className="hidden md:block w-[45%] text-center">
-        <motion.div 
-          whileHover={{ scale: 1.1 }}
+        <motion.div
+          whileHover={{ scale: 1.05 }}
           className="inline-block px-6 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm"
         >
-          <span className="text-[var(--cyan)] font-mono text-sm">
-            {formatDate(exp.startDate)} — {exp.isCurrent ? "Present" : formatDate(exp.endDate)}
+          <span className="text-[var(--cyan)] font-mono text-sm tracking-tight">
+            {dateRange}
           </span>
         </motion.div>
       </div>
 
       {/* 2. Timeline Central Dot */}
-      <div className="absolute left-4 md:left-1/2 md:-translate-x-1/2 z-20">
-        <motion.div 
-          whileHover={{ scale: 1.5 }}
-          className="w-4 h-4 rounded-full bg-black border-2 border-[var(--cyan)] shadow-[0_0_10px_#00F5D4]"
-        >
-          <div className="w-full h-full rounded-full animate-ping bg-[var(--cyan)] opacity-20" />
-        </motion.div>
+      <div className="absolute left-[9px] md:left-1/2 md:-translate-x-1/2 top-2 md:top-auto z-20">
+        <div className="w-4 h-4 rounded-full bg-[var(--bg)] border-2 border-[var(--cyan)] shadow-[0_0_10px_rgba(0,245,212,0.5)]">
+          <div className="w-full h-full rounded-full animate-pulse bg-[var(--cyan)] opacity-40" />
+        </div>
       </div>
 
       {/* 3. The Content Card */}
-      <div className="pl-12 md:pl-0 md:w-[45%]">
+      <div className="w-full md:w-[45%] pl-10 md:pl-0">
         <motion.div
-          whileHover={{ y: -5, rotateX: 2, rotateY: isEven ? -2 : 2 }}
-          className="group relative bg-white/[0.03] border border-white/10 p-6 rounded-[2rem] backdrop-blur-xl hover:border-[var(--purple)]/50 transition-colors duration-500"
-          style={{ transformStyle: "preserve-3d" }}
+          whileHover={{ y: -5 }} // Removed 3D tilt for better stability
+          className="group relative bg-white/[0.03] border border-white/10 p-5 md:p-8 rounded-3xl backdrop-blur-xl hover:border-[var(--purple)]/50 transition-all duration-300"
         >
-          {/* Card Glow Effect */}
-          <div className="absolute -inset-px bg-gradient-to-br from-[var(--cyan)]/20 to-[var(--purple)]/20 rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity blur-md" />
+          {/* Mobile-Only Date Display */}
+          <div className="md:hidden flex items-center gap-2 text-[var(--cyan)] font-mono text-[10px] mb-2 opacity-80">
+            <Calendar size={12} />
+            {dateRange}
+          </div>
 
           <div className="relative z-10">
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <h3 className="text-2xl font-bold text-white group-hover:text-[var(--cyan)] transition-colors">
-                  {exp.role}
-                </h3>
-                <div className="flex items-center gap-2 text-gray-400 mt-1">
-                  <Briefcase size={14} className="text-[var(--purple)]" />
-                  <span className="text-sm font-medium">{exp.company}</span>
-                </div>
+            <header className="mb-4">
+              <h3 className="text-xl md:text-2xl font-bold text-white group-hover:text-[var(--cyan)] transition-colors leading-tight">
+                {exp.role}
+              </h3>
+              <div className="flex items-center gap-2 text-gray-400 mt-2">
+                <Briefcase size={14} className="text-[var(--purple)]" />
+                <span className="text-sm font-medium tracking-wide uppercase">{exp.company}</span>
               </div>
-              <div className="md:hidden text-[10px] text-gray-500 font-mono border border-white/10 px-2 py-1 rounded">
-                {new Date(exp.startDate).getFullYear()}
-              </div>
-            </div>
+            </header>
 
-            <p className="text-gray-400 text-sm leading-relaxed mb-6 italic">
-              &quot;{exp.description}&quot;
-            </p>
+            <ul className="space-y-3 mb-6">
+              {stylishExperience.map((expe, i) => (
+                <li key={i} className="flex gap-2 text-gray-400 text-sm leading-relaxed">
+                  <span className="text-[var(--cyan)] shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full bg-[var(--cyan)] opacity-50" />
+                  <span>{expe.trim()}</span>
+                </li>
+              ))}
+            </ul>
 
             {/* Tech Tags */}
             <div className="flex flex-wrap gap-2">
               {exp.techStack?.map((tech) => (
-                <span 
+                <span
                   key={tech}
-                  className="flex items-center gap-1 text-[10px] px-3 py-1 rounded-full bg-black/50 border border-white/5 text-gray-300 group-hover:border-[var(--cyan)]/30 transition-all"
+                  className="flex items-center gap-1 text-[10px] px-3 py-1 rounded-md bg-white/5 border border-white/10 text-gray-300 group-hover:border-[var(--cyan)]/30 transition-all"
                 >
                   <ChevronRight size={10} className="text-[var(--cyan)]" />
                   {tech}
@@ -187,7 +183,6 @@ function ExperienceCard({ exp, index }: { exp: Experience; index: number }) {
   );
 }
 
-// Utility to format date nicely
 function formatDate(dateStr?: string) {
   if (!dateStr) return "";
   const date = new Date(dateStr);
