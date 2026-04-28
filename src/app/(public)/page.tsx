@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import AboutSkills from "@/components/sections/AboutSkills";
 import Contact from "@/components/sections/Contact";
+import Connect from "@/components/sections/Connect";
 
 const techStacks = [
   "Full Stack Developer",
@@ -131,7 +132,9 @@ export default function HomePage() {
 
       {/* SECTION 2: ABOUT & SKILLS */}
       <AboutSkills />
+      <Connect/>
       <Contact/>
+
     </main>
   );
 }
