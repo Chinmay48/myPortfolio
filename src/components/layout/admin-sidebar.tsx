@@ -4,9 +4,10 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { signOut } from "next-auth/react"; // Import signOut
 import { 
   LayoutDashboard, Briefcase, Cpu, GraduationCap, 
-  Trophy, ChevronRight, Menu, X 
+  Trophy, ChevronRight, Menu, X, LogOut 
 } from "lucide-react";
 
 const links = [
@@ -21,6 +22,10 @@ export default function AdminSidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
+  const handleLogout = () => {
+    signOut({ callbackUrl: "/login" });
+  };
+
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
       <div className="flex items-center gap-3 mb-10 px-2">
@@ -30,7 +35,7 @@ export default function AdminSidebar() {
         </h2>
       </div>
 
-      <nav className="flex flex-col gap-2">
+      <nav className="flex flex-col gap-2 flex-grow">
         {links.map((link) => {
           const isActive = pathname === link.href;
           const Icon = link.icon;
@@ -48,11 +53,27 @@ export default function AdminSidebar() {
                 <Icon size={20} className={isActive ? "text-cyan-400" : "group-hover:text-cyan-300 transition-colors"} />
                 <span className="font-medium text-sm tracking-wide">{link.name}</span>
               </div>
-              {isActive && <motion.div layoutId="active-pill" className="absolute inset-0 bg-cyan-500/10 border border-cyan-500/20 rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.1)]" />}
+              {isActive && (
+                <motion.div 
+                  layoutId="active-pill" 
+                  className="absolute inset-0 bg-cyan-500/10 border border-cyan-500/20 rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.1)]" 
+                />
+              )}
             </Link>
           );
         })}
       </nav>
+
+      {/* Logout Button at the Bottom */}
+      <div className="pt-4 mt-4 border-t border-white/5">
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 p-3 rounded-xl text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition-all duration-300 group"
+        >
+          <LogOut size={20} className="group-hover:-translate-x-1 transition-transform" />
+          <span className="font-medium text-sm tracking-wide">Logout</span>
+        </button>
+      </div>
     </div>
   );
 
@@ -62,7 +83,7 @@ export default function AdminSidebar() {
       <div className="lg:hidden fixed top-0 left-0 right-0 h-16 border-b border-white/5 bg-black/60 backdrop-blur-xl z-40 flex items-center justify-between px-6">
         <div className="flex items-center gap-2">
            <div className="h-6 w-6 rounded bg-cyan-500 shadow-[0_0_10px_cyan]" />
-           <span className="font-bold text-sm tracking-tighter">ADMIN</span>
+           <span className="font-bold text-sm tracking-tighter text-white">ADMIN</span>
         </div>
         <button onClick={() => setIsOpen(true)} className="p-2 text-cyan-400 bg-cyan-400/10 rounded-lg">
           <Menu size={20} />

@@ -18,12 +18,17 @@ export const authOptions: NextAuthOptions = {
     },
 
     async redirect({ url, baseUrl }) {
+      // If the url is the sign-out or login page, let it redirect there
+      if (url.includes("/login") || url === baseUrl) {
+        return url;
+      }
+      // Default behavior for sign-in: go to admin
       return `${baseUrl}/admin`;
     },
   },
 
   pages: {
-    signIn: "/login", // your custom login page
+    signIn: "/login",
   },
 
   secret: process.env.NEXTAUTH_SECRET,

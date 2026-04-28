@@ -20,7 +20,7 @@ export default function PublicLayout({
     >
       <Navbar />
 
-      <div className="relative isolate">
+      <div className="relative isolate pt-12">
         {children}
       </div>
 

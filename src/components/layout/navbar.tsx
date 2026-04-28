@@ -10,6 +10,7 @@ const navLinks = [
   { name: "Projects", href: "/projects" },
   { name: "Experience", href: "/experience" },
   { name: "Achievements", href: "/achievements" },
+  {name:"Login",href:"/login"}
 ];
 
 export default function Navbar() {
