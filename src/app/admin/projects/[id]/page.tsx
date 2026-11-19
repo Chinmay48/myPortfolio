@@ -12,7 +12,7 @@ export default async function AdminProjectsEditPage({params}:Props) {
     const { id } = await params;
 
 const res = await fetch(
-  `${process.env.NEXT_PUBLIC_BASE_URL}/api/achievements/${id}`,
+  `${process.env.NEXT_PUBLIC_BASE_URL}/api/projects/${id}`,
   { cache: "no-store" }
 );
 
