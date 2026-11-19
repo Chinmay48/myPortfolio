@@ -58,7 +58,7 @@ export default function ProjectsPage() {
               SOLUTIONS
             </span>
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
@@ -69,9 +69,9 @@ export default function ProjectsPage() {
         </header>
 
         {loading ? (
-          <div className="columns-1 md:columns-2 lg:columns-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="mb-8 h-80 rounded-3xl bg-white/5 animate-pulse" />
+              <div key={i} className="h-[420px] rounded-3xl bg-white/5 animate-pulse" />
             ))}
           </div>
         ) : (
@@ -79,16 +79,17 @@ export default function ProjectsPage() {
             {projects.length === 0 ? (
               <p className="text-center text-gray-500 py-20">No projects found.</p>
             ) : (
-              /* Asymmetrical Staggered Layout using Columns */
-              <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
+              /* Uniform Grid Layout so all cards share equal height */
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
                 {projects.map((project, index) => (
                   <motion.div
                     key={project._id}
-                    initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                    layout
+                    initial={{ opacity: 0, scale: 0.94, y: 20 }}
                     whileInView={{ opacity: 1, scale: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: index * 0.05 }}
-                    className="break-inside-avoid"
+                    transition={{ delay: index * 0.05, duration: 0.4 }}
+                    className="h-full"
                   >
                     <ProjectCard project={project} />
                   </motion.div>
